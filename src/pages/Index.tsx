@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import ProductTab from '@/components/ProductTab';
 import { Product } from '@/components/ProductCard';
@@ -144,10 +144,24 @@ const Index: React.FC = () => {
       duration: 2000,
     });
   };
+  
+  const handleRemoveFromCart = (productId: number) => {
+    const updatedCart = cartItems.filter(item => item.id !== productId);
+    setCartItems(updatedCart);
+    toast({
+      title: 'Removed from cart',
+      description: 'Item has been removed from your cart',
+      duration: 2000,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header cartItemCount={cartItems.length} />
+      <Header 
+        cartItemCount={cartItems.length} 
+        cartItems={cartItems}
+        onRemoveFromCart={handleRemoveFromCart}
+      />
       
       <main className="container mx-auto px-4 py-8">
         <section className="mb-10">
