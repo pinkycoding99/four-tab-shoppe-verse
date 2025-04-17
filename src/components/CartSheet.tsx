@@ -2,8 +2,9 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet';
-import { XCircle, Trash2 } from 'lucide-react';
+import { XCircle, Trash2, Plus, Minus } from 'lucide-react';
 import { Product } from './ProductCard';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 
 interface CartSheetProps {
   isOpen: boolean;
@@ -35,43 +36,60 @@ const CartSheet: React.FC<CartSheetProps> = ({ isOpen, onClose, cartItems, onRem
               <p>Your cart is empty</p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {cartItems.map((item) => {
-                // Calculate item price with discount if applicable
-                const itemPrice = item.discountPercentage 
-                  ? item.price * (1 - item.discountPercentage / 100) 
-                  : item.price;
-                
-                return (
-                  <div key={item.id} className="flex gap-4 py-2 border-b border-gray-100">
-                    <div className="h-20 w-20 flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
-                      <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-800">{item.name}</h4>
-                      <div className="flex items-center mt-1">
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="w-[80px]">Image</TableHead>
+                  <TableHead>Product</TableHead>
+                  <TableHead className="text-right">Price</TableHead>
+                  <TableHead className="w-[70px] text-center">Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {cartItems.map((item) => {
+                  // Calculate item price with discount if applicable
+                  const itemPrice = item.discountPercentage 
+                    ? item.price * (1 - item.discountPercentage / 100) 
+                    : item.price;
+                  
+                  return (
+                    <TableRow key={item.id}>
+                      <TableCell className="p-2">
+                        <div className="h-16 w-16 rounded-md overflow-hidden bg-gray-100">
+                          <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        <div>
+                          <p className="font-medium text-gray-800 text-sm">{item.name}</p>
+                          <p className="text-xs text-gray-500">{item.category}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
                         {item.discountPercentage ? (
-                          <div className="flex items-center space-x-1">
-                            <span className="text-gray-400 line-through text-sm">${item.price.toFixed(2)}</span>
+                          <div className="flex flex-col items-end">
+                            <span className="text-gray-400 line-through text-xs">${item.price.toFixed(2)}</span>
                             <span className="text-shop-purple font-medium">${itemPrice.toFixed(2)}</span>
                           </div>
                         ) : (
                           <span className="text-shop-purple font-medium">${itemPrice.toFixed(2)}</span>
                         )}
-                      </div>
-                    </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="text-gray-500 hover:text-red-500"
-                      onClick={() => onRemoveItem(item.id)}
-                    >
-                      <Trash2 size={18} />
-                    </Button>
-                  </div>
-                );
-              })}
-            </div>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-gray-500 hover:text-red-500 h-8 w-8"
+                          onClick={() => onRemoveItem(item.id)}
+                        >
+                          <Trash2 size={16} />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
           )}
         </div>
         
